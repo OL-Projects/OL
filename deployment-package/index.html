@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OL Invoicing</title>
+  <!-- PWA Meta Tags -->
+  <meta name="theme-color" content="#3c3f54">
+  <meta name="description" content="Optimized Leadership Invoice Generator - Create and manage professional invoices">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="OL Invoice">
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+  <!-- Favicon with SVG fallback -->
+  <link rel="shortcut icon" href="icons/icon.svg" onerror="this.href='data:image/svg+xml,%3Csvg%20width%3D%22512%22%20height%3D%22512%22%20viewBox%3D%220%200%20512%20512%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%22512%22%20height%3D%22512%22%20rx%3D%2280%22%20fill%3D%22%23343a50%22%2F%3E%3Cpath%20d%3D%22M170%20180C170%20140%20196%20120%20256%20120C316%20120%20342%20140%20342%20180C342%20220%20316%20240%20256%20240C196%20240%20170%20220%20170%20180Z%22%20fill%3D%22%23ff5722%22%2F%3E%3Cpath%20d%3D%22M356%20192H322V332H356V192Z%22%20fill%3D%22%23ff5722%22%2F%3E%3Cpath%20d%3D%22M356%20332H422V366H356V332Z%22%20fill%3D%22%23ff5722%22%2F%3E%3C%2Fsvg%3E'">
+  <link rel="apple-touch-icon" href="icons/icon.svg" onerror="this.href='data:image/svg+xml,%3Csvg%20width%3D%22512%22%20height%3D%22512%22%20viewBox%3D%220%200%20512%20512%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%22512%22%20height%3D%22512%22%20rx%3D%2280%22%20fill%3D%22%23343a50%22%2F%3E%3Cpath%20d%3D%22M170%20180C170%20140%20196%20120%20256%20120C316%20120%20342%20140%20342%20180C342%20220%20316%20240%20256%20240C196%20240%20170%20220%20170%20180Z%22%20fill%3D%22%23ff5722%22%2F%3E%3Cpath%20d%3D%22M356%20192H322V332H356V192Z%22%20fill%3D%22%23ff5722%22%2F%3E%3Cpath%20d%3D%22M356%20332H422V366H356V332Z%22%20fill%3D%22%23ff5722%22%2F%3E%3C%2Fsvg%3E'">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dashboard-layout">
+  <!-- Install Button -->
+  <button id="install-button" class="install-button" style="display: none;">
+    <i class="bi bi-download"></i> Install App
+  </button>
+  
+  <!-- Theme toggle button -->
+  <button class="theme-toggle" id="theme-toggle" title="Toggle dark/light mode">
+    <i class="bi bi-moon-fill" id="theme-icon"></i>
+  </button>
+  
+  <!-- Offline status indicator -->
+  <div id="offline-indicator" class="offline-indicator" style="display: none;">
+    <i class="bi bi-wifi-off"></i> Offline Mode
+  </div>
+  
+  <!-- Left Sidebar Dashboard -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">OL</div>
+      <h3><span>O</span>ptimized <span>L</span>eadership</h3>
+    </div>
+    
+    <div class="sidebar-menu">
+      <ul>
+        <li class="active" data-section="create-invoice">
+          <a href="#create-invoice"><i class="bi bi-file-earmark-plus"></i> <span>Create Invoice</span></a>
+        </li>
+        <li data-section="clients">
+          <a href="#clients"><i class="bi bi-people-fill"></i> <span>Clients</span></a>
+        </li>
+        <li data-section="templates">
+          <a href="#templates"><i class="bi bi-file-earmark-text"></i> <span>Templates</span></a>
+        </li>
+        <li data-section="expenses">
+          <a href="#expenses"><i class="bi bi-receipt"></i> <span>Expenses</span></a>
+        </li>
+        <li data-section="settings">
+          <a href="#settings"><i class="bi bi-gear"></i> <span>Settings</span></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  
+  <!-- Main Content Area -->
+  <div class="main-content">
+    <!-- Header -->
+    <div class="app-header">
+      <div class="header-title">
+        <h2>Invoice Generator</h2>
+      </div>
+      <div class="nav-buttons">
+        <button class="btn btn-outline-light">Invoices</button>
+        <button class="btn btn-success">Save</button>
+      </div>
+    </div>
+    
+    <!-- Create Invoice Section -->
+    <div id="create-invoice-section" class="main-section">
+      <div class="container mt-4 mb-5">
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <h1 class="mb-4">Create New Invoice</h1>
+            
+            <form id="invoice-form">
+              <!-- Logo and Message Row -->
+              <div class="row mb-4">
+                <div class="col-md-3">
+                  <div class="logo-upload-container mb-3 p-3 text-center border rounded">
+                    <div id="logo-preview" class="mb-2">
+                      <span>YOUR<br>LOGO<br>HERE</span>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-secondary mb-2" id="logo-upload-btn">
+                      <i class="bi bi-upload"></i> Upload Logo
+                    </button>
+                    <input type="file" id="logo-upload" accept="image/*" style="display: none;">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="hide-logo-placeholder">
+                      <label class="form-check-label" for="hide-logo-placeholder">
+                        Hide placeholder in exports
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-9">
+                  <!-- Message field -->
+                  <div class="mb-3">
+                    <label for="invoice-message" class="form-label">Message</label>
+                    <textarea class="form-control" id="invoice-message" rows="4" placeholder="Enter your message here"></textarea>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- From Information -->
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h5 class="mb-0">From</h5>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="mb-3">
+                        <label for="from-name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="from-name" value="Spiro Kaglis">
+                      </div>
+                      <div class="mb-3">
+                        <label for="from-email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="from-email" value="contact@optimizedleadership.com">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="mb-3">
+                        <label for="from-phone" class="form-label">Phone</label>
+                        <input type="tel" class="form-control" id="from-phone" value="4385022327">
+                      </div>
+                      <div class="mb-3">
+                        <label for="from-address" class="form-label">Address</label>
+                        <textarea class="form-control" id="from-address" rows="2">140 rue leduc, H7W 4E9, Laval, QC, Canada</textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Client Information -->
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h5 class="mb-0">Bill To</h5>
+                </div>
+                <div class="card-body">
+                  <div class="row mb-3">
+                    <div class="col-12">
+                      <label for="client-select" class="form-label">Select Client</label>
+                      <select class="form-select" id="client-select">
+                        <option value="" selected>-- Select a client --</option>
+                        <option value="1">NETCOR</option>
+                        <option value="2">Optimized Leadership</option>
+                        <option value="3">Tech Solutions Inc.</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div id="client-details" class="row">
+                    <div class="col-md-6">
+                      <div class="mb-3">
+                        <label for="client-company" class="form-label">Company</label>
+                        <input type="text" class="form-control" id="client-company">
+                      </div>
+                      <div class="mb-3">
+                        <label for="client-address" class="form-label">Address</label>
+                        <textarea class="form-control" id="client-address" rows="2"></textarea>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="mb-3">
+                        <label for="client-phone" class="form-label">Phone</label>
+                        <input type="tel" class="form-control" id="client-phone">
+                      </div>
+                      <div class="mb-3">
+                        <label for="client-website" class="form-label">Website</label>
+                        <input type="url" class="form-control" id="client-website">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Invoice Details -->
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header">
+                      <h5 class="mb-0">Invoice Details</h5>
+                    </div>
+                    <div class="card-body">
+                      <div class="mb-3">
+                        <label for="invoice-number" class="form-label">Invoice Number</label>
+                        <input type="text" class="form-control" id="invoice-number" value="#27001">
+                      </div>
+                      <div class="mb-3">
+                        <label for="invoice-date" class="form-label">Invoice Date</label>
+                        <input type="date" class="form-control" id="invoice-date">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header">
+                      <h5 class="mb-0">Payment Details</h5>
+                    </div>
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="mb-3">
+                            <label for="period-start" class="form-label">Period Start</label>
+                            <input type="date" class="form-control" id="period-start">
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="mb-3">
+                            <label for="period-end" class="form-label">Period End</label>
+                            <input type="date" class="form-control" id="period-end">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label for="payment-due" class="form-label">Payment Due</label>
+                        <input type="date" class="form-control" id="payment-due">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Services Section -->
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h5 class="mb-0">Services</h5>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-bordered" id="invoice-items">
+                      <thead class="table-light">
+                        <tr>
+                          <th style="width: 35%;">Description</th>
+                          <th style="width: 15%;">Service Type</th>
+                          <th style="width: 15%;">Quantity</th>
+                          <th style="width: 10%;">Rate</th>
+                          <th style="width: 15%;">Amount</th>
+                          <th style="width: 10%;">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody id="items-body">
+                        <tr class="item-row">
+                          <td><input type="text" class="form-control item-description" placeholder="Item description"></td>
+                          <td>
+                            <select class="form-select item-service-type">
+                              <option value="Operations">Operations</option>
+                              <option value="Consultation">Consultation</option>
+                              <option value="Traveling">Traveling</option>
+                              <option value="Other">Other</option>
+                            </select>
+                          </td>
+                          <td>
+                            <div class="input-group">
+                              <input type="number" class="form-control item-quantity" value="0" min="0">
+                              <select class="form-select item-unit">
+                                <option value="hours">hours</option>
+                                <option value="locations">locations</option>
+                                <option value="km">km</option>
+                              </select>
+                            </div>
+                          </td>
+                          <td><input type="number" class="form-control item-rate" value="0" min="0" step="0.01"></td>
+                          <td class="item-amount">$0.00</td>
+                          <td><button type="button" class="btn btn-sm btn-danger remove-item"><i class="bi bi-trash"></i></button></td>
+                        </tr>
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <td colspan="6">
+                            <button type="button" class="btn btn-sm btn-secondary" id="add-item">
+                              <i class="bi bi-plus-circle"></i> Add Item
+                            </button>
+                          </td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Totals and Tax Section -->
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h5 class="mb-0">Totals</h5>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="mb-3">
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" id="apply-gst">
+                          <label class="form-check-label" for="apply-gst">Apply GST</label>
+                        </div>
+                        <div class="input-group">
+                          <input type="number" class="form-control" id="gst-rate" value="5.000" step="0.001" min="0">
+                          <span class="input-group-text">%</span>
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" id="apply-tvq">
+                          <label class="form-check-label" for="apply-tvq">Apply TVQ</label>
+                        </div>
+                        <div class="input-group">
+                          <input type="number" class="form-control" id="tvq-rate" value="9.975" step="0.001" min="0">
+                          <span class="input-group-text">%</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="card">
+                        <div class="card-body">
+                          <div class="d-flex justify-content-between mb-2">
+                            <span>Subtotal:</span>
+                            <span id="subtotal">$0.00</span>
+                          </div>
+                          <div class="d-flex justify-content-between mb-2">
+                            <span>GST:</span>
+                            <span id="gst-amount">$0.00</span>
+                          </div>
+                          <div class="d-flex justify-content-between mb-2">
+                            <span>TVQ:</span>
+                            <span id="tvq-amount">$0.00</span>
+                          </div>
+                          <div class="d-flex justify-content-between font-weight-bold border-top pt-2 mt-2">
+                            <strong>Total:</strong>
+                            <strong id="total">$0.00</strong>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Payment Information -->
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h5 class="mb-0">Payment Information</h5>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="mb-3">
+                        <label for="payment-methods" class="form-label">Payment Methods</label>
+                        <input type="text" class="form-control" id="payment-methods" value="Cheque, Wire Transfer">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="mb-3">
+                        <label for="payment-instructions" class="form-label">Payment Instructions</label>
+                        <textarea class="form-control" id="payment-instructions" rows="2"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Notes -->
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h5 class="mb-0">Notes</h5>
+                </div>
+                <div class="card-body">
+                  <textarea class="form-control" id="invoice-notes" rows="3"></textarea>
+                </div>
+              </div>
+              
+              <!-- Action Buttons -->
+              <div class="d-flex justify-content-between mt-4">
+                <div>
+                  <button type="button" class="btn btn-primary me-2" id="save-btn">
+                    <i class="bi bi-save"></i> Save Invoice
+                  </button>
+                  <button type="button" class="btn btn-outline-secondary me-2" id="clear-btn">
+                    <i class="bi bi-x-circle"></i> Clear Form
+                  </button>
+                  <button type="button" class="btn btn-outline-danger me-2" id="show-install-btn" style="display: none;">
+                    <i class="bi bi-download"></i> Install App
+                  </button>
+                </div>
+                <div>
+                  <button type="button" class="btn btn-success me-2" id="export-pdf">
+                    <i class="bi bi-file-pdf"></i> Export PDF
+                  </button>
+                  <button type="button" class="btn btn-primary me-2" id="download-pdf">
+                    <i class="bi bi-download"></i> Download PDF
+                  </button>
+                  <button type="button" class="btn btn-info" id="save-as-pdf">
+                    <i class="bi bi-folder-symlink"></i> Save As...
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Other sections would go here but are minimally implemented for this demo -->
+    <div id="clients-section" class="main-section" style="display: none;">
+      <div class="container mt-4">
+        <h1 class="mb-4">Clients</h1>
+        <p class="text-muted">Client management functionality will be implemented in future updates.</p>
+      </div>
+    </div>
+    
+    <div id="templates-section" class="main-section" style="display: none;">
+      <div class="container mt-4">
+        <h1 class="mb-4">Invoice Templates</h1>
+        <p class="text-muted">Template management functionality will be implemented in future updates.</p>
+      </div>
+    </div>
+    
+    <div id="expenses-section" class="main-section" style="display: none;">
+      <div class="container mt-4">
+        <h1 class="mb-4">Expenses</h1>
+        <p class="text-muted">Expense tracking functionality will be implemented in future updates.</p>
+      </div>
+    </div>
+    
+    <div id="settings-section" class="main-section" style="display: none;">
+      <div class="container mt-4">
+        <h1 class="mb-4">Settings</h1>
+        <p class="text-muted">Settings functionality will be implemented in future updates.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom scripts - order matters for dependencies -->
+  <script src="utilities.js"></script>
+  <script src="export.js"></script>
+  <script src="script.js"></script>
+  <script src="pwa.js"></script>
+</body>
+</html>
